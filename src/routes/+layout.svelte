@@ -10,4 +10,5 @@
 <slot />
 
 <Footer />
-  
+
+export const prerender = true;
