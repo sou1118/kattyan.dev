@@ -1,5 +1,5 @@
 <script>
-    import "../app.css";
+    import "../common/TailwindCSS.svelte";
   </script>
   
   <slot />
