@@ -1,0 +1,67 @@
+---
+import { ViewTransitions } from "astro:transitions";
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import "../styles/globals.css";
+import "katex/dist/katex.min.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = "Kattyan",
+  description = "Personal website and blog",
+  image,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} image={image} />
+    <ViewTransitions />
+
+    <script is:inline>
+      // 初期テーマの設定
+      const theme = (() => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+        return 'light';
+      })();
+            
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+
+      window.localStorage.setItem('theme', theme);
+    </script>
+
+    <script>
+      document.addEventListener('astro:after-swap', () => {
+        // ページ遷移後のテーマの復元
+        localStorage.getItem('theme') === 'dark'
+          ? document.documentElement.classList.add('dark')
+          : document.documentElement.classList.remove('dark');
+      });
+    </script>
+  </head>
+  <body class="min-h-screen bg-background text-foreground flex flex-col">
+    <div class="max-w-4xl mx-auto px-4 py-8 w-full">
+      <Header />
+      <main>
+        <slot />
+      </main>
+      <Footer />
+    </div>
+  </body>
+</html>

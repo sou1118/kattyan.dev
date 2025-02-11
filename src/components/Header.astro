@@ -1,0 +1,47 @@
+---
+import ThemeToggle from "./ThemeToggle.astro";
+
+const { pathname } = Astro.url;
+---
+
+<header class="flex justify-between items-center mb-8">
+  <nav class="flex gap-4">
+    <a 
+      href="/" 
+      class:list={[
+        "hover:text-primary transition-colors",
+        pathname === "/" && "text-primary font-medium"
+      ]}
+    >
+      Home
+    </a>
+    <a 
+      href="/about" 
+      class:list={[
+        "hover:text-primary transition-colors",
+        pathname === "/about" && "text-primary font-medium"
+      ]}
+    >
+      About
+    </a>
+    <a 
+      href="/blog" 
+      class:list={[
+        "hover:text-primary transition-colors",
+        pathname.startsWith("/blog") && "text-primary font-medium"
+      ]}
+    >
+      Blog
+    </a>
+    <a 
+      href="/links" 
+      class:list={[
+        "hover:text-primary transition-colors",
+        pathname.startsWith("/links") && "text-primary font-medium"
+      ]}
+    >
+      Links
+    </a>
+  </nav>
+  <ThemeToggle />
+</header>

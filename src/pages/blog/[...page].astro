@@ -1,0 +1,73 @@
+---
+import { getCollection } from "astro:content";
+import FormattedDate from "../../components/FormattedDate.astro";
+import Pagination from "../../components/Pagination.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths({ paginate }) {
+  const posts = (await getCollection("blog")).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  );
+
+  return paginate(posts, { pageSize: 5 });
+}
+
+const { page } = Astro.props;
+const { data: posts, currentPage, lastPage } = page;
+
+// Get all unique tags
+const allPosts = await getCollection("blog");
+const tags = [...new Set(allPosts.flatMap((post) => post.data.tags))];
+---
+
+<BaseLayout title="Blog | Kattyan">
+  <div class="space-y-8">
+    <div class="space-y-4">
+      <h1 class="text-4xl font-bold">Blog</h1>
+      <p class="text-xl text-muted-foreground">Thoughts, ideas, and technical writings</p>
+    </div>
+
+    <!-- Tags filter -->
+    <div class="flex flex-wrap gap-2">
+      {tags.map(tag => (
+        <a
+          href={`/blog/tag/${tag}`}
+          class="inline-flex items-center rounded-md bg-muted px-3 py-1 text-sm font-medium 
+                 ring-1 ring-inset ring-muted-foreground/10 hover:bg-muted/70"
+        >
+          {tag}
+        </a>
+      ))}
+    </div>
+
+    <div class="grid gap-4">
+      {posts.map((post) => (
+        <a href={`/blog/${post.slug}`} class="no-underline group">
+          <article class="rounded-lg border bg-card p-6 transition-colors hover:bg-muted/50">
+            <div class="flex flex-col space-y-2">
+              <div class="flex items-center gap-2">
+                {post.data.emoji && <span class="text-2xl">{post.data.emoji}</span>}
+                <h2 class="text-2xl font-semibold tracking-tight">{post.data.title}</h2>
+              </div>
+              <p class="text-muted-foreground">{post.data.description}</p>
+              <div class="flex justify-between items-center">
+                {post.data.tags && (
+                  <div class="flex gap-2">
+                    {post.data.tags.map((tag) => (
+                      <span class="inline-flex items-center rounded-md bg-muted px-2 py-1 text-sm font-medium">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <FormattedDate date={post.data.pubDate} class="text-sm text-muted-foreground" />
+              </div>
+            </div>
+          </article>
+        </a>
+      ))}
+    </div>
+
+    <Pagination currentPage={currentPage} lastPage={lastPage} />
+  </div>
+</BaseLayout>

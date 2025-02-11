@@ -1,0 +1,43 @@
+---
+import type { CollectionEntry } from "astro:content";
+import FormattedDate from "../components/FormattedDate.astro";
+import BaseLayout from "./BaseLayout.astro";
+
+type Props = CollectionEntry<"blog">;
+
+const { data, slug } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, emoji } = data;
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="prose prose-zinc dark:prose-invert max-w-none">
+    <div class="mb-8">
+      {heroImage && (
+        <img 
+          src={heroImage} 
+          alt="" 
+          class="rounded-lg border bg-muted"
+          transition:name={`hero-${slug}`}
+        />
+      )}
+      <div class="space-y-4">
+        <div class="flex items-center gap-2">
+          {emoji && <span class="text-4xl" transition:name={`emoji-${slug}`}>{emoji}</span>}
+          <h1 class="text-4xl font-bold leading-tight lg:text-5xl my-0">{title}</h1>
+        </div>
+        <div class="flex gap-2 text-sm text-muted-foreground">
+          <FormattedDate date={pubDate} />
+          {
+            updatedDate && (
+              <>
+                <span>•</span>
+                <span>Updated on <FormattedDate date={updatedDate} /></span>
+              </>
+            )
+          }
+        </div>
+      </div>
+    </div>
+    <slot />
+  </article>
+</BaseLayout>

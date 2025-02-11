@@ -1,0 +1,53 @@
+---
+import { getCollection } from "astro:content";
+import FormattedDate from "../components/FormattedDate.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const posts = (await getCollection("blog"))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+
+<BaseLayout>
+  <div class="space-y-8">
+    <div class="space-y-4">
+      <h1 class="text-4xl font-bold">Hi, I'm Kattyan</h1>
+      <p class="text-xl text-muted-foreground">
+        A programming lover
+      </p>
+    </div>
+
+    <div class="prose prose-zinc dark:prose-invert">
+      <p>
+        ホームページへ訪問していただきありがとうございます。このホームページはブログを兼ねます。
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      <h2 class="text-2xl font-semibold">Latest Posts</h2>
+      <div class="grid gap-4">
+        {posts.map((post) => (
+          <a href={`/blog/${post.slug}`} class="no-underline group">
+            <article class="rounded-lg border bg-card p-6 transition-colors hover:bg-muted/50">
+              <div class="flex flex-col space-y-2">
+                <div class="flex items-center gap-2">
+                  {post.data.emoji && (
+                    <span class="text-2xl" transition:name={`emoji-${post.slug}`}>
+                      {post.data.emoji}
+                    </span>
+                  )}
+                  <h3 class="text-2xl font-semibold tracking-tight">{post.data.title}</h3>
+                </div>
+                <p class="text-muted-foreground">{post.data.description}</p>
+                <FormattedDate date={post.data.pubDate} class="text-sm text-muted-foreground" />
+              </div>
+            </article>
+          </a>
+        ))}
+      </div>
+      <a href="/blog" class="inline-flex text-sm text-muted-foreground hover:text-foreground">
+        View all posts &rarr;
+      </a>
+    </div>
+  </div>
+</BaseLayout>

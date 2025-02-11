@@ -1,0 +1,59 @@
+---
+interface Props {
+  currentPage: number;
+  lastPage: number;
+  class?: string;
+}
+
+const { currentPage, lastPage, class: className } = Astro.props;
+
+const prev = currentPage > 1 ? `${currentPage - 1}` : null;
+const next = currentPage < lastPage ? `${currentPage + 1}` : null;
+
+const pages = Array.from({ length: lastPage }, (_, i) => i + 1);
+---
+
+<nav class:list={["flex justify-center space-x-2", className]} aria-label="Pagination">
+  <a
+    href={prev ? `/blog/${prev}` : undefined}
+    class:list={[
+      "inline-flex items-center rounded-md px-3 py-2 text-sm font-medium ring-1 ring-inset",
+      prev
+        ? "ring-muted-foreground/10 hover:bg-muted"
+        : "pointer-events-none text-muted-foreground ring-muted-foreground/5"
+    ]}
+    aria-disabled={!prev}
+  >
+    Previous
+  </a>
+  
+  <div class="hidden sm:flex space-x-2">
+    {pages.map(page => (
+      <a
+        href={page === 1 ? '/blog' : `/blog/${page}`}
+        class:list={[
+          "inline-flex items-center rounded-md px-3 py-2 text-sm font-medium ring-1 ring-inset",
+          page === currentPage
+            ? "bg-primary text-primary-foreground ring-primary"
+            : "ring-muted-foreground/10 hover:bg-muted"
+        ]}
+        aria-current={page === currentPage ? 'page' : undefined}
+      >
+        {page}
+      </a>
+    ))}
+  </div>
+
+  <a
+    href={next ? `/blog/${next}` : undefined}
+    class:list={[
+      "inline-flex items-center rounded-md px-3 py-2 text-sm font-medium ring-1 ring-inset",
+      next
+        ? "ring-muted-foreground/10 hover:bg-muted"
+        : "pointer-events-none text-muted-foreground ring-muted-foreground/5"
+    ]}
+    aria-disabled={!next}
+  >
+    Next
+  </a>
+</nav>

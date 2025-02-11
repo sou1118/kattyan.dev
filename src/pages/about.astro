@@ -1,0 +1,61 @@
+---
+import Card from "../components/ui/Card.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="About | Kattyan">
+  <div class="space-y-8">
+    <div class="space-y-4">
+      <h1 class="text-4xl font-bold">About Me</h1>
+      <p class="text-xl text-muted-foreground">A little bit about myself</p>
+    </div>
+
+    <div class="prose prose-zinc dark:prose-invert">
+      <p>
+        普段は大学生をしています。新しい技術を学ぶことが好きで、ウェブから組み込みまで幅広くかじっています。
+      </p>
+    </div>
+
+    <Card>
+      <div class="p-6">
+        <h2 class="text-2xl font-semibold mb-4">Interests</h2>
+        <div class="grid gap-4 md:grid-cols-2">
+          <div>
+            <h3 class="font-semibold mb-2">Development</h3>
+            <ul class="list-disc list-inside space-y-1 text-muted-foreground">
+              <li>Building CLI Tools with Rust</li>
+              <li>Embedded Development (ESP32, RP2040)</li>
+              <li>Backend Development with Rust</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-semibold mb-2">Infrastructure & Security</h3>
+            <ul class="list-disc list-inside space-y-1 text-muted-foreground">
+              <li>Container Runtime</li>
+              <li>Public Cloud (AWS, Google Cloud)</li>
+              <li>Authentication with Passkey</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </Card>
+
+    <Card>
+      <div class="p-6">
+        <h2 class="text-2xl font-semibold mb-4">Experience</h2>
+        <div class="space-y-4">
+          <div>
+            <h3 class="font-semibold">受講生@セキュリティ・キャンプ全国大会 2024 専門B プロダクトセキュリティクラス</h3>
+            <p class="text-sm text-muted-foreground">2024.8</p>
+            <p class="mt-2">プロダクトセキュリティについて1週間学ばせていただきました。参加記は<a href="https://zenn.dev/sou1118/articles/2804d8359215fa">こちら</a>。</p>
+          </div>
+          <div>
+            <h3 class="font-semibold">Trainee@SecHack365 開発駆動コース 仲山ゼミ</h3>
+            <p class="text-sm text-muted-foreground">2023.6 - 2024.3</p>
+            <p class="mt-2">hakolateという開発環境を開発しました。詳細は<a href="https://zenn.dev/sou1118/articles/610797ccc4e70b">こちら</a>。</p>
+          </div>
+        </div>
+      </div>
+    </Card>
+  </div>
+</BaseLayout>
