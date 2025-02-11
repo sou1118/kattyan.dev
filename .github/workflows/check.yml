@@ -1,0 +1,70 @@
+name: Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        check-type: ["biome", "textlint", "build"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup mise
+        uses: jdx/mise-action@v2
+
+      - name: Setup tools with mise
+        run: mise i
+
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Run Biome Check
+        if: matrix.check-type == 'biome'
+        run: bun run check
+
+      - name: Run textlint
+        if: matrix.check-type == 'textlint'
+        run: bun run textlint
+
+      - name: Build Check
+        if: matrix.check-type == 'build'
+        run: bun run build
+
+  status-check:
+    runs-on: ubuntu-latest
+    needs: check
+    permissions: {}
+    if: always()
+    steps:
+      - name: Successful check
+        if: ${{ needs.check.result == 'success' }}
+        run: exit 0
+      - name: Failed check
+        if: ${{ needs.check.result != 'success' }}
+        run: exit 1
+
+  enable-auto-merge:
+    needs: [status-check]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pull-requests: write
+    if: |
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.user.login == 'renovate[bot]' &&
+      contains(github.event.pull_request.body, ' **Automerge**: Enabled.') &&
+      !github.event.pull_request.head.repo.fork
+    steps:
+      - name: Enable auto-merge
+        run: gh pr merge --auto --squash --delete-branch "$PR_NUMBER"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
