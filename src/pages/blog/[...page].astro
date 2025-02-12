@@ -15,7 +15,7 @@ export async function getStaticPaths({ paginate }) {
 const { page } = Astro.props;
 const { data: posts, currentPage, lastPage } = page;
 
-// Get all unique tags
+// タグの取得
 const allPosts = await getCollection("blog");
 const tags = [...new Set(allPosts.flatMap((post) => post.data.tags))];
 ---
@@ -26,20 +26,19 @@ const tags = [...new Set(allPosts.flatMap((post) => post.data.tags))];
       <h1 class="text-4xl font-bold">Blog</h1>
       <p class="text-xl text-muted-foreground">Thoughts, ideas, and technical writings</p>
     </div>
-
     <!-- Tags filter -->
     <div class="flex flex-wrap gap-2">
-      {tags.map(tag => (
-        <a
-          href={`/blog/tag/${tag}`}
-          class="inline-flex items-center rounded-md bg-muted px-3 py-1 text-sm font-medium 
-                 ring-1 ring-inset ring-muted-foreground/10 hover:bg-muted/70"
-        >
-          {tag}
-        </a>
-      ))}
+      {
+        tags.map((tag) => (
+          <a
+            href={`/blog/tag/${tag}`}
+            class="inline-flex items-center rounded-md bg-muted px-3 py-1 text-sm font-medium ring-1 ring-inset ring-muted-foreground/10 hover:bg-muted/70"
+          >
+            {tag}
+          </a>
+        ))
+      }
     </div>
-
     <div class="grid gap-4">
       {posts.map((post) => (
         <a href={`/blog/${post.slug}`} class="no-underline group">
@@ -60,14 +59,13 @@ const tags = [...new Set(allPosts.flatMap((post) => post.data.tags))];
                     ))}
                   </div>
                 )}
-                <FormattedDate date={post.data.pubDate} class="text-sm text-muted-foreground" />
+                <FormattedDate date={post.data.pubDate} class="text-sm text-muted-foreground" showTime={true} />
               </div>
             </div>
           </article>
         </a>
       ))}
     </div>
-
     <Pagination currentPage={currentPage} lastPage={lastPage} />
   </div>
 </BaseLayout>

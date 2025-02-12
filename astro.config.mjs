@@ -25,4 +25,8 @@ export default defineConfig({
       entrypoint: "astro/assets/services/sharp",
     },
   },
+  redirects: {
+    "/blog/hello-world": "/blog/posts/hello-world",
+    "/blog/renewal-blog-astro": "/blog/posts/renewal-blog-astro",
+  },
 });
