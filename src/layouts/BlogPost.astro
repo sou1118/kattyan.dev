@@ -31,7 +31,7 @@ const { title, description, pubDate, updatedDate, heroImage, emoji } = data;
             updatedDate && (
               <>
                 <span>•</span>
-                <span>Updated on <FormattedDate date={updatedDate} /></span>
+                <span>更新: <FormattedDate date={updatedDate} showTime={true} /></span>
               </>
             )
           }

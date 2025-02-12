@@ -2,17 +2,21 @@
 interface Props {
   date: Date;
   class?: string;
+  showTime?: boolean;
 }
 
-const { date, class: className } = Astro.props;
+const { date, class: className, showTime = false } = Astro.props;
 ---
 
 <time datetime={date.toISOString()} class={className}>
   {
-    date.toLocaleDateString('en-us', {
+    date.toLocaleDateString('ja-jp', {
       year: 'numeric',
-      month: 'short',
+      month: 'long',
       day: 'numeric',
+      hour: showTime ? '2-digit' : undefined,
+      minute: showTime ? '2-digit' : undefined,
+      timeZone: 'Asia/Tokyo'
     })
   }
 </time>
