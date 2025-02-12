@@ -7,9 +7,17 @@ type Props = CollectionEntry<"blog">;
 
 const { data, slug } = Astro.props;
 const { title, description, pubDate, updatedDate, heroImage, emoji } = data;
+
+// OGP画像のURLを構築
+const ogImage = `/og/${slug.replace("posts/", "")}.png`;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout 
+  title={title} 
+  description={description}
+  image={ogImage}
+  ogType="article"
+>
   <article class="prose prose-zinc dark:prose-invert max-w-none">
     <div class="mb-8">
       {heroImage && (

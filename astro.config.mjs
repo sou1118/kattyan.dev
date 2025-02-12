@@ -29,4 +29,9 @@ export default defineConfig({
     "/blog/hello-world": "/blog/posts/hello-world",
     "/blog/renewal-blog-astro": "/blog/posts/renewal-blog-astro",
   },
+  vite: {
+    optimizeDeps: {
+      exclude: ["@resvg/resvg-js"],
+    },
+  },
 });
