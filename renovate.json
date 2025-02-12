@@ -1,0 +1,86 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:js-app",
+    "schedule:weekly",
+    ":maintainLockFilesWeekly",
+    ":semanticCommits",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["^@astrojs", "^astro$"],
+      "groupName": "astro packages",
+      "groupSlug": "astro",
+      "automerge": true
+    },
+    {
+      "matchPackagePatterns": ["^@biomejs"],
+      "groupName": "biome packages",
+      "groupSlug": "biome",
+      "automerge": true
+    },
+    {
+      "matchPackagePatterns": ["^textlint"],
+      "groupName": "textlint packages",
+      "groupSlug": "textlint",
+      "automerge": true
+    },
+    {
+      "matchPackagePatterns": [
+        "^@tailwindcss",
+        "^tailwindcss$",
+        "^postcss$",
+        "^autoprefixer$"
+      ],
+      "groupName": "tailwind packages",
+      "groupSlug": "tailwind",
+      "automerge": true
+    },
+    {
+      "matchPackagePatterns": ["^rehype-"],
+      "groupName": "rehype packages",
+      "groupSlug": "rehype",
+      "automerge": true
+    },
+    {
+      "matchPackagePatterns": ["^remark-"],
+      "groupName": "remark packages",
+      "groupSlug": "remark",
+      "automerge": true
+    },
+    {
+      "matchPackageNames": ["katex", "rehype-katex"],
+      "groupName": "katex packages",
+      "groupSlug": "katex",
+      "automerge": true
+    },
+    {
+      "matchPackageNames": ["shiki", "sharp"],
+      "groupName": "image processing and syntax highlighting",
+      "groupSlug": "image-syntax",
+      "automerge": true
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": "dev dependencies (non-major)",
+      "automerge": true
+    }
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 3am on monday"]
+  },
+  "timezone": "Asia/Tokyo",
+  "dependencyDashboard": true,
+  "rangeStrategy": "pin",
+  "prCreation": "not-pending",
+  "stabilityDays": 3,
+  "platformAutomerge": true
+}
