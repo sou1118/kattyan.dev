@@ -1,0 +1,32 @@
+---
+title: "OGPに対応しました"
+description: "SNSでのシェア時に画像が表示されるようになりました"
+pubDate: 2025-02-12T22:10:00+09:00
+emoji: "📈"
+tags: ["web", "programming"]
+---
+
+SNSでのシェア時に画像が表示されるようになりました。
+
+## OGPとは
+
+OGP（Open Graph Protocol）は、各種SNSでリンクを共有した際に、リンクと一緒に画像を表示するためのプロトコルです。
+
+このプロトコルを用いて、ブログ記事のタイトルを含む画像を生成しました。
+
+## 実装方法
+
+今回の実装では以下の技術スタックを使用しました。
+
+- `satori`: JavaScriptからSVGを生成
+- `@resvg/resvg-js`: SVGをPNGに変換
+
+画像生成のエンドポイントはAstroの動的ルーティング機能を利用して実装しました。
+各記事のタイトルに対応する画像を生成しています。
+
+## 参考
+
+この実装にあたり、以下の記事を参考にさせていただきました。
+
+- [blog.lacolaco.net - satoriを使ったAstroのOGP画像生成メモ](https://blog.lacolaco.net/posts/astro-satori-og-image-generation/)
+- [haxibami.net - A is for Astronaut](https://www.haxibami.net/blog/posts/blog-astro-renewal)
