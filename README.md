@@ -1,48 +1,91 @@
-# Astro Starter Kit: Basics
+# kattyan-dev
 
-```sh
-npm create astro@latest -- --template basics
+個人ブログ兼ポートフォリオサイトです。
+
+## 前提条件
+
+- [mise](https://mise.jdx.dev/) - 開発環境マネージャー
+- [bun](https://bun.sh/) - JavaScriptツールチェーン
+
+## セットアップ
+
+```bash
+# リポジトリのクローン
+git clone git@github.com:sou1118/kattyan.dev.git
+cd kattyan.dev
+
+# 開発環境のセットアップ
+mise i
+
+# 依存関係のインストール
+bun install
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+## 開発
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+```bash
+# 開発サーバーの起動
+bun run dev
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+# ビルド
+bun run build
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
+# プレビュー
+bun run preview
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## 品質管理
 
-## 🧞 Commands
+```bash
+# コードのチェック
+bun run check
 
-All commands are run from the root of the project, from a terminal:
+# コードの自動修正
+bun run check:fix
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+# 記事のチェック
+bun run textlint
 
-## 👀 Want to learn more?
+# 記事の自動修正
+bun run textlint:fix
+```
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## ブログ記事の作成
+
+1. `src/content/blog/` に新しいMDXファイルを作成
+2. 以下のフロントマターを設定
+
+```md
+---
+title: 記事のタイトル
+publishDate: 2024-02-12
+description: 記事の説明
+tags: ["tag1", "tag2"]
+---
+```
+
+### 記事内で使用可能な機能
+
+- 数式（KaTeX）
+- シンタックスハイライト
+- MDXコンポーネント
+- Tailwind CSS
+
+## デプロイ
+
+mainブランチへのプッシュで自動的にGitHub Pagesへデプロイされます。
+
+## アーキテクチャ
+
+詳細なアーキテクチャについては[ARCHITECTURE.md](./ARCHITECTURE.md)を参照してください。
+
+## ライセンス
+
+[LICENSE](./LICENSE)を参照してください。
+
+## 開発ポリシー
+
+- リリースは自動化（GitHub Actions + GitHub Pages）
+- 依存関係の更新は自動化（Renovate）
+- コードのLintとFormatはBiomeで
+- 記事の品質管理はtextlintで
