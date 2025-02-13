@@ -25,14 +25,14 @@ export const GET: APIRoute = async ({ params }) => {
     const fontRegular = await fs.readFile(
       path.resolve(
         process.cwd(),
-        "src/pages/og/LINESeed_jp/LINESeedJP_OTF_Rg.woff",
+        "src/assets/fonts/LINESeed-jp/LINESeedJP-OTF-Rg.woff",
       ),
     );
 
     const fontBold = await fs.readFile(
       path.resolve(
         process.cwd(),
-        "src/pages/og/LINESeed_jp/LINESeedJP_OTF_Bd.woff",
+        "src/assets/fonts/LINESeed-jp/LINESeedJP-OTF-Bd.woff",
       ),
     );
 
