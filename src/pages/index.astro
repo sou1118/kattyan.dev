@@ -17,7 +17,7 @@ const posts = (await getCollection("blog"))
       </p>
     </div>
 
-    <div class="prose prose-zinc dark:prose-invert">
+    <div class="prose prose-zinc dark:prose-invert w-full max-w-none">
       <p>
         ホームページへ訪問していただきありがとうございます。このホームページはブログを兼ねます。
       </p>
@@ -48,6 +48,13 @@ const posts = (await getCollection("blog"))
       <a href="/blog" class="inline-flex text-sm text-muted-foreground hover:text-foreground">
         View all posts &rarr;
       </a>
+    </div>
+    <div class="prose prose-zinc dark:prose-invert text-sm max-w-none">
+      <p class="text-muted-foreground">
+        当サイトでは <a href="https://www.goatcounter.com/" class="hover:text-foreground" target="_blank" rel="noopener noreferrer">GoatCounter</a> を使用してアクセス解析を行っています。
+        これはプライバシーを重視した分析ツールで、個人を特定できる情報は収集しません。
+        詳しくは <a href="https://www.goatcounter.com/help/privacy" class="hover:text-foreground" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a> をご確認ください。
+      </p>
     </div>
   </div>
 </BaseLayout>

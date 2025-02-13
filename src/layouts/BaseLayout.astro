@@ -59,6 +59,17 @@ const {
           : document.documentElement.classList.remove('dark');
       });
     </script>
+    <!-- GoatCounter Analytics -->
+    <script is:inline>
+      window.goatcounter = {
+        path: function(p) { return location.host + p }
+      }
+    </script>
+    <script 
+      data-goatcounter="https://kattyan.goatcounter.com/count"
+      async 
+      src="//gc.zgo.at/count.js"
+    ></script>
   </head>
   <body class="min-h-screen bg-background text-foreground flex flex-col">
     <div class="max-w-4xl mx-auto px-4 py-8 w-full">
