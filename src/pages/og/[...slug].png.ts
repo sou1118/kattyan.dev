@@ -76,12 +76,17 @@ export const GET: APIRoute = async ({ params }) => {
         "Cache-Control": "public, max-age=31536000, immutable",
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("OGP生成エラー:", error);
-    if (error.stack) {
-      console.error(error.stack);
+    if (error instanceof Error) {
+      if (error.stack) {
+        console.error(error.stack);
+      }
+      return new Response(`Failed to generate OGP: ${error.message}`, {
+        status: 500,
+      });
     }
-    return new Response(`Failed to generate OGP: ${error.message}`, {
+    return new Response("An unknown error occurred", {
       status: 500,
     });
   }
