@@ -1,6 +1,10 @@
+import { loadDefaultJapaneseParser } from "budoux";
 import React from "react";
 
 export const OgImage = ({ title = "kattyan.dev" }) => {
+  const parser = loadDefaultJapaneseParser();
+  const words = parser.parse(title);
+
   return (
     <div
       style={{
@@ -8,114 +12,77 @@ export const OgImage = ({ title = "kattyan.dev" }) => {
         flexDirection: "column",
         width: "100%",
         height: "100%",
-        background: "white",
-        position: "relative",
+        background: "linear-gradient(135deg, #FF8C00, #FFD700)",
+        padding: "24px",
+        boxSizing: "border-box",
       }}
     >
-      {/* 背景のグラデーション装飾 */}
       <div
         style={{
-          position: "absolute",
-          inset: "-16px",
-          background: "linear-gradient(135deg, #FFA500, #FFD700)",
-          filter: "blur(32px)",
-          opacity: 0.5,
-        }}
-      />
-
-      {/* メインコンテンツエリア */}
-      <div
-        style={{
-          position: "relative",
           display: "flex",
+          flex: 1,
+          background: "white",
+          borderRadius: "48px",
+          padding: "64px",
           flexDirection: "column",
           justifyContent: "space-between",
-          height: "100%",
-          padding: "64px",
-          zIndex: 10,
+          alignItems: "center",
+          boxSizing: "border-box",
+          maxHeight: "100%",
+          overflow: "hidden",
         }}
       >
         <div
           style={{
+            flex: 1,
+            width: "100%",
             display: "flex",
-            flexDirection: "column",
-            gap: "24px",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
+            padding: "20px 0",
           }}
         >
-          {/* アクセントライン */}
           <div
             style={{
-              width: "96px",
-              height: "4px",
-              background: "linear-gradient(to right, #FFA500, #FFD700)",
-            }}
-          />
-
-          {/* タイトル */}
-          <h1
-            style={{
-              fontSize: "64px",
+              fontSize: "72px",
               fontWeight: "bold",
-              color: "#44403c",
-              lineHeight: 1.3,
+              color: "#333333",
+              lineHeight: 1.4,
               margin: 0,
+              textAlign: "center",
+              width: "100%",
               maxWidth: "1000px",
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            {title}
-          </h1>
+            {words.map((word) => (
+              <div
+                key={word}
+                style={{
+                  display: "block",
+                }}
+              >
+                {word}
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* フッター */}
         <div
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
+            fontSize: "36px",
+            color: "#666666",
+            textAlign: "center",
+            marginTop: "36px",
+            fontWeight: "normal",
+            flexShrink: 0,
           }}
         >
-          <div
-            style={{
-              fontSize: "36px",
-              fontWeight: "bold",
-              color: "#57534e",
-            }}
-          >
-            kattyan.dev
-          </div>
-
-          {/* デコレーティブな要素 */}
-          <div
-            style={{
-              display: "flex",
-              gap: "12px",
-            }}
-          >
-            <div
-              style={{
-                width: "12px",
-                height: "48px",
-                borderRadius: "9999px",
-                background: "linear-gradient(to bottom, #FFA500, #FFD700)",
-              }}
-            />
-            <div
-              style={{
-                width: "12px",
-                height: "32px",
-                borderRadius: "9999px",
-                background: "linear-gradient(to bottom, #FFD700, #FFA500)",
-              }}
-            />
-            <div
-              style={{
-                width: "12px",
-                height: "64px",
-                borderRadius: "9999px",
-                background: "linear-gradient(to bottom, #FFA500, #FFD700)",
-              }}
-            />
-          </div>
+          kattyan.dev
         </div>
       </div>
     </div>
