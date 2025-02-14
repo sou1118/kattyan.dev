@@ -18,7 +18,11 @@ const ogImage = `/og/${slug.replace("posts/", "")}.png`;
   image={ogImage}
   ogType="article"
 >
-  <article class="prose prose-zinc dark:prose-invert max-w-none">
+  <article
+    class="prose prose-zinc dark:prose-invert max-w-none"
+    itemscope
+    itemtype="http://schema.org/BlogPosting"
+  >
     <div class="mb-8">
       {heroImage && (
         <img 
@@ -26,26 +30,32 @@ const ogImage = `/og/${slug.replace("posts/", "")}.png`;
           alt="" 
           class="rounded-lg border bg-muted"
           transition:name={`hero-${slug}`}
+          itemprop="image"
         />
       )}
       <div class="space-y-4">
         <div class="flex items-center gap-2">
           {emoji && <span class="text-4xl" transition:name={`emoji-${slug}`}>{emoji}</span>}
-          <h1 class="text-4xl font-bold leading-tight lg:text-5xl my-0">{title}</h1>
+          <h1 class="text-4xl font-bold leading-tight lg:text-5xl my-0" itemprop="headline">{title}</h1>
         </div>
         <div class="flex gap-2 text-sm text-muted-foreground">
-          <FormattedDate date={pubDate} />
+          <time itemprop="datePublished" datetime={pubDate.toISOString()}>
+            <FormattedDate date={pubDate} />
+          </time>
           {
             updatedDate && (
               <>
                 <span>•</span>
-                <span>更新: <FormattedDate date={updatedDate} showTime={true} /></span>
+                <span>更新: <time itemprop="dateModified" datetime={updatedDate.toISOString()}><FormattedDate date={updatedDate} showTime={true} /></time></span>
               </>
             )
           }
         </div>
+        <meta itemprop="description" content={description} />
       </div>
     </div>
-    <slot />
+    <div itemprop="articleBody">
+      <slot />
+    </div>
   </article>
 </BaseLayout>
