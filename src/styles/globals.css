@@ -86,6 +86,51 @@
   }
 }
 
+/* Link Card styles */
+.prose .remark-link-card-plus__container {
+  @apply my-8;
+}
+
+.prose .remark-link-card-plus__card {
+  @apply flex border rounded-lg overflow-hidden hover:bg-muted/50 transition-colors no-underline;
+}
+
+.prose .remark-link-card-plus__main {
+  @apply flex-1 p-4 flex flex-col justify-between min-w-0;
+}
+
+.prose .remark-link-card-plus__content {
+  @apply space-y-2;
+}
+
+.prose .remark-link-card-plus__title {
+  @apply text-lg font-semibold leading-tight text-foreground line-clamp-2 m-0;
+}
+
+.prose .remark-link-card-plus__description {
+  @apply text-sm text-muted-foreground line-clamp-2 m-0;
+}
+
+.prose .remark-link-card-plus__meta {
+  @apply flex items-center gap-2 mt-2;
+}
+
+.prose .remark-link-card-plus__favicon {
+  @apply w-4 h-4 m-0;
+}
+
+.prose .remark-link-card-plus__url {
+  @apply text-sm text-muted-foreground;
+}
+
+.prose .remark-link-card-plus__thumbnail {
+  @apply w-48 flex-shrink-0;
+}
+
+.prose .remark-link-card-plus__image {
+  @apply w-full h-full object-cover m-0;
+}
+
 /* Animation utilities */
 @layer utilities {
   .animate-fade-up {

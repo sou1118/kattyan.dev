@@ -3,6 +3,7 @@ import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
 import rehypeKatex from "rehype-katex";
+import remarkLinkCard from "remark-link-card-plus";
 import remarkMath from "remark-math";
 
 export default defineConfig({
@@ -14,7 +15,17 @@ export default defineConfig({
         theme: "github-dark",
         wrap: true,
       },
-      remarkPlugins: [remarkMath],
+      remarkPlugins: [
+        remarkMath,
+        [
+          remarkLinkCard,
+          {
+            cache: false,
+            shortenUrl: true,
+            thumbnailPosition: "right",
+          },
+        ],
+      ],
       rehypePlugins: [rehypeKatex],
     }),
     tailwind(),
