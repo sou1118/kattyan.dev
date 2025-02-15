@@ -7,34 +7,25 @@
     ":semanticCommits",
     "helpers:pinGitHubActionDigests"
   ],
-  "labels": [
-    "dependencies"
-  ],
+  "labels": ["dependencies"],
   "packageRules": [
     {
       "groupName": "astro packages",
       "groupSlug": "astro",
       "automerge": true,
-      "matchPackageNames": [
-        "/^@astrojs/",
-        "/^astro$/"
-      ]
+      "matchPackageNames": ["/^@astrojs/", "/^astro$/"]
     },
     {
       "groupName": "biome packages",
       "groupSlug": "biome",
       "automerge": true,
-      "matchPackageNames": [
-        "/^@biomejs/"
-      ]
+      "matchPackageNames": ["/^@biomejs/"]
     },
     {
       "groupName": "textlint packages",
       "groupSlug": "textlint",
       "automerge": true,
-      "matchPackageNames": [
-        "/^textlint/"
-      ]
+      "matchPackageNames": ["/^textlint/"]
     },
     {
       "groupName": "tailwind packages",
@@ -51,59 +42,40 @@
       "groupName": "rehype packages",
       "groupSlug": "rehype",
       "automerge": true,
-      "matchPackageNames": [
-        "/^rehype-/"
-      ]
+      "matchPackageNames": ["/^rehype-/"]
     },
     {
       "groupName": "remark packages",
       "groupSlug": "remark",
       "automerge": true,
-      "matchPackageNames": [
-        "/^remark-/"
-      ]
+      "matchPackageNames": ["/^remark-/"]
     },
     {
-      "matchPackageNames": [
-        "katex",
-        "rehype-katex"
-      ],
+      "matchPackageNames": ["katex", "rehype-katex"],
       "groupName": "katex packages",
       "groupSlug": "katex",
       "automerge": true
     },
     {
-      "matchPackageNames": [
-        "shiki",
-        "sharp"
-      ],
+      "matchPackageNames": ["shiki", "sharp"],
       "groupName": "image processing and syntax highlighting",
       "groupSlug": "image-syntax",
       "automerge": true
     },
     {
-      "matchUpdateTypes": [
-        "major"
-      ],
+      "matchUpdateTypes": ["major"],
       "automerge": false
     },
     {
-      "matchDepTypes": [
-        "devDependencies"
-      ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch", "minor"],
       "groupName": "dev dependencies (non-major)",
       "automerge": true
     }
   ],
   "lockFileMaintenance": {
     "enabled": true,
-    "schedule": [
-      "before 3am on monday"
-    ]
+    "schedule": ["before 3am on monday"]
   },
   "timezone": "Asia/Tokyo",
   "dependencyDashboard": true,
