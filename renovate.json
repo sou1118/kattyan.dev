@@ -10,45 +10,45 @@
   "labels": ["dependencies"],
   "packageRules": [
     {
-      "matchPackagePatterns": ["^@astrojs", "^astro$"],
       "groupName": "astro packages",
       "groupSlug": "astro",
-      "automerge": true
+      "automerge": true,
+      "matchPackageNames": ["/^@astrojs/", "/^astro$/"]
     },
     {
-      "matchPackagePatterns": ["^@biomejs"],
       "groupName": "biome packages",
       "groupSlug": "biome",
-      "automerge": true
+      "automerge": true,
+      "matchPackageNames": ["/^@biomejs/"]
     },
     {
-      "matchPackagePatterns": ["^textlint"],
       "groupName": "textlint packages",
       "groupSlug": "textlint",
-      "automerge": true
+      "automerge": true,
+      "matchPackageNames": ["/^textlint/"]
     },
     {
-      "matchPackagePatterns": [
-        "^@tailwindcss",
-        "^tailwindcss$",
-        "^postcss$",
-        "^autoprefixer$"
-      ],
       "groupName": "tailwind packages",
       "groupSlug": "tailwind",
-      "automerge": true
+      "automerge": true,
+      "matchPackageNames": [
+        "/^@tailwindcss/",
+        "/^tailwindcss$/",
+        "/^postcss$/",
+        "/^autoprefixer$/"
+      ]
     },
     {
-      "matchPackagePatterns": ["^rehype-"],
       "groupName": "rehype packages",
       "groupSlug": "rehype",
-      "automerge": true
+      "automerge": true,
+      "matchPackageNames": ["/^rehype-/"]
     },
     {
-      "matchPackagePatterns": ["^remark-"],
       "groupName": "remark packages",
       "groupSlug": "remark",
-      "automerge": true
+      "automerge": true,
+      "matchPackageNames": ["/^remark-/"]
     },
     {
       "matchPackageNames": ["katex", "rehype-katex"],
@@ -81,6 +81,6 @@
   "dependencyDashboard": true,
   "rangeStrategy": "pin",
   "prCreation": "not-pending",
-  "stabilityDays": 3,
+  "minimumReleaseAge": "3 days",
   "platformAutomerge": true
 }
