@@ -1,0 +1,70 @@
+---
+title: "さくらのクラウドのAppRunβ版を触ってみました"
+description: "さくらのクラウドのAppRunβ版を触ってみた感想です"
+pubDate: 2025-02-19T18:35:00+09:00
+emoji: "📦"
+tags: ["web", "programming", "さくらのクラウド", "container"]
+---
+
+## はじめに
+
+ガバメントクラウドの条件付き認定を受けたさくらインターネットさんが提供するさくらのクラウドにて、コンテナのマネージドサービスがβ版で提供されたので使ってみました。
+
+デジタル庁のサイトにて、さくらのクラウドの開発計画の進捗状況が公開されていて、今後他のサービスでもβ版が始まるのかなと楽しみですね。
+
+https://www.digital.go.jp/policies/gov_cloud
+
+## AppRunとは
+
+さくらのクラウドのコンテナのマネージドサービスで、Google CloudならCloud Run, AWSならFargateみたいな立ち位置ですね。
+
+コンテナイメージをデプロイすると、サービスが簡単に立ち上げられるってやつですね。
+
+## 使ってみた感想
+
+Solid.jsとAxumを使ったTodoアプリをデプロイしてみた感想を書いていきます。
+
+https://github.com/sou1118/apprun-demo
+
+### 良かった点
+
+後発サービスということもあってか、UI/UXは他のクラウドベンダーのサービスと比べてわかりやすかったです。
+
+### 改善してほしいなと思った点
+
+#### エラーについて
+
+エラーハンドリングをもう少し細かく分けてほしいです。指定されているコンテナレジストリの認証が不安定なのか、認証を弱めてあげたらエラーが消えましたが、どこのエラーなのか分からなくて戸惑いました。
+（この後、再度認証を強めたらエラーが出ないことを確認したので、一時的な問題だったのかなと感じられました）
+
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">あの、さくらインターネットさん… <a href="https://t.co/1PW2h0Xpik">pic.twitter.com/1PW2h0Xpik</a></p>&mdash; Kattyan📦 (@kattyancmp) <a href="https://twitter.com/kattyancmp/status/1891819791016657231?ref_src=twsrc%5Etfw">February 18, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+
+#### ログについて
+
+ログが出ない点は改善してほしいです。30分程経過してもデプロイが完了しなかったため、どこで処理が止まっているのかが分からなく困惑しました。
+翌朝になってデプロイが完了していたので、処理が止まっていたわけではなさそうですが、ログが出ていれば安心感がありました。
+
+{/* textlint-disable ja-technical-writing/sentence-length */}
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">ずっと処理中ですね。AppRunはベータ版なのでこれからに期待です。 <a href="https://t.co/2bVy51p6bg">pic.twitter.com/2bVy51p6bg</a></p>&mdash; Kattyan📦 (@kattyancmp) <a href="https://twitter.com/kattyancmp/status/1891876161912762796?ref_src=twsrc%5Etfw">February 18, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+{/* textlint-enable */}
+
+#### コンテナレジストリについて
+
+現状は`sakuracr.jp`にアップロードされたコンテナイメージのみのデプロイとなっており、他のレジストリからpullすることは出来ません。
+これは仕方ないのですが、コンテナレジストリに保存されているイメージ一覧が出ないので、ちゃんとアップロードされているか確認できないところが不便でした。
+
+こちらもβ版なので、これから改善されることを期待しています。
+
+### その他
+
+GitHub Actionsでデプロイすることが多いので、GitHub Actionsとさくらのクラウド間でOIDC認証ができるようになり、キーレスなデプロイができるといいなと感じました。
+
+https://docs.github.com/ja/actions/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-cloud-providers
+
+## おわりに
+
+AppRunはβ版なので、これから改善されることを期待しています。
+
+これからサービスが拡充されるはずなので、楽しみですね。
+
+さくらインターネットさん、頑張ってください。期待してます。
