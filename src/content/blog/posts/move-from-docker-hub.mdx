@@ -1,0 +1,90 @@
+---
+title: "Docker Hubからの移行先探し"
+description: "Docker Hubの制限が厳しくなったのでハンズオンなどの際に使えそうなミラー先を探します"
+pubDate: 2025-02-24T13:20:00+09:00
+updatedDate: 2025-02-27T11:00:00+09:00
+emoji: "💾"
+tags: ["container"]
+---
+## はじめに
+
+2025/4/1からDocker Hubにログインしていないユーザーは10 pulls/hourとなることがリリースされました。
+
+https://docs.docker.com/docker-hub/usage
+
+企業等での利用はミラーサーバーを立てたり、Docker Hubへのサブスクリプションで済ませられますが、ハンズオンや個人利用は厳しい場面があります。
+
+https://zenn.dev/finatext/articles/5d55b3d1eab29a
+
+https://www.docker.com/pricing
+
+今回はそのような層向けに、Docker Hubからの移行先を探してみました。
+
+{/* textlint-disable ja-technical-writing/sentence-length */}
+{/* textlint-disable ja-technical-writing/ja-no-mixed-period */}
+<blockquote class="bluesky-embed" data-bluesky-uri="at://did:plc:brukrsmiycfv7jb3xhiaedzb/app.bsky.feed.post/3liufmquvp22h" data-bluesky-cid="bafyreigxxygwfkv4drc6fhyolfjjlyhelet5uvzyof3kkkiahpd6fosukm"><p lang="ja">最近はRustをよく書くのでdistrolessをベースイメージでよく使いますが、今動いているサービスはDocker Hubから拾ってきているので、distrolessに寄せるか、パブリッククラウドベンダーのミラーを使うしか無さそうです</p>&mdash; Kattyan (<a href="https://bsky.app/profile/did:plc:brukrsmiycfv7jb3xhiaedzb?ref_src=embed">@kattyan.dev</a>) <a href="https://bsky.app/profile/did:plc:brukrsmiycfv7jb3xhiaedzb/post/3liufmquvp22h?ref_src=embed">2025年2月24日 2:53</a></blockquote><script async src="https://embed.bsky.app/static/embed.js" charset="utf-8"></script>
+
+<blockquote class="bluesky-embed" data-bluesky-uri="at://did:plc:brukrsmiycfv7jb3xhiaedzb/app.bsky.feed.post/3liufp465fk2h" data-bluesky-cid="bafyreidbenbbefhrd4kgww7i7vnt5eag6uoz4agb4ihf6jfdk7345wjpv4"><p lang="ja">ハンズオンの時とかも気をつけないといけないですね</p>&mdash; Kattyan (<a href="https://bsky.app/profile/did:plc:brukrsmiycfv7jb3xhiaedzb?ref_src=embed">@kattyan.dev</a>) <a href="https://bsky.app/profile/did:plc:brukrsmiycfv7jb3xhiaedzb/post/3liufp465fk2h?ref_src=embed">2025年2月24日 2:54</a></blockquote><script async src="https://embed.bsky.app/static/embed.js" charset="utf-8"></script>
+{/* textlint-enable */}
+
+## 個人的に最低限必要なイメージ
+
+- Distroless
+- Ubuntu
+- NGINX
+- PostgreSQL
+- CUDA
+
+## Distroless
+
+Distrolessイメージ自体は元々Docker Hub配布ではなく、Google Cloudによるプロジェクトです。
+`gcr.io`から配布されているので、Docker Hubの制限には影響されません。
+
+以下のリンクにまとまってます。
+
+https://github.com/GoogleContainerTools/distroless?tab=readme-ov-file#how-do-i-use-distroless-images
+
+## Ubuntu
+
+Ubuntu公式曰く、Docker HubとAmazon ECR Publicにて提供されているとのことです。
+
+>On Amazon ECR Public and Docker Hub, images are provided in three groups:
+>   - Ubuntu on Docker Hub and ECR Public have development releases with security updates
+>   - LTS (“Canonical”) on ECR Public has Free LTS images with up to five years fixes
+>   - Customer-only content with up to ten years of fixes. Contact us.
+
+https://ubuntu.com/security/docker-images
+
+こちらがAmazon ECR PublicのUbuntuリポジトリです。
+
+https://gallery.ecr.aws/ubuntu
+
+## NGINX
+
+Amazon ECR Publicにて提供されています。
+
+https://gallery.ecr.aws/nginx/nginx
+
+## PostgreSQL
+
+Amazon ECR Publicにて提供されています。
+
+https://gallery.ecr.aws/docker/library/postgres
+
+## CUDA
+
+NVIDIAのCUDAイメージは、NVIDIA GPU Cloud（NGC）にて提供されています。
+
+https://catalog.ngc.nvidia.com/containers
+
+## おわりに
+
+Dockerもコア部分等はほとんどOSS化されているので、Docker Hubのような多くのトラフィックが流れるサイトを運用するのは大変だと察します。
+
+https://github.com/moby/moby
+
+https://github.com/containerd/containerd
+
+https://github.com/opencontainers/runc
+
+少なからずお布施をAWSには毎月払っているので、ECR Publicのようなサービスが増えていくのはありがたいです。
