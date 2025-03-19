@@ -1,0 +1,94 @@
+---
+title: "GitHub Actionsでcgroup v1を使う"
+description: "Ubuntu 20.04のサポートが終了した後、GitHub Actionsでcgroup v1を使う方法を探します"
+pubDate: 2025-03-19T21:00:00+09:00
+emoji: "🐳"
+tags: ["container", "github-actions", "linux"]
+---
+
+## はじめに
+
+3月中にGitHubがGitHub Actionsでの`ubuntu-20.04`のサポートを終了します。
+`ubuntu-20.04`から`ubuntu-22.04`以降のバージョンに移行することで、cgroup v2がデフォルトになります。
+それに伴い、コンテナランタイム開発で使われるActionsにおいて、cgroup v1を使う方法を探してみました。
+
+## 背景
+
+[youki](https://github.com/youki-dev/youki)というコンテナランタイムでは、cgroup v1とv2の両方に対応するテストを実行しています。
+GitHub Actionsの環境がUbuntu 20.04から24.04にアップグレードされることで、cgroup v2がデフォルトになり、cgroup v1のテストが困難になりました。
+
+これは単にyoukiだけでなく、コンテナ技術に関わる多くのプロジェクトに影響する問題です。後方互換性のテストは重要であり、cgroup v1をテストする方法を見つける必要がありました。
+
+## 問題点
+
+Ubuntu 22.04以降では、カーネルはcgroup v2を優先的に使用するようになっています。
+Ubuntu 20.04ではデフォルトでcgroup v1が使われていました。
+しかしながら、GitHub Actionsが22.04や24.04にアップグレードすることで、cgroup v1のテストが難しくなりました。
+
+特に以下の問題が発生しました。
+
+- cgroup v2とv1ではAPIが異なるため、両方のテストが必要(cgroup v2ではeBPFを使用するため挙動が異なる)
+- 実際の運用環境ではまだcgroup v1を使用しているケースも多い(RHEL8系は2029年までサポート)
+- GitHub Actionsの環境ではカーネルパラメータを変更できない
+
+## 解決策
+
+この問題を解決するために、[Lima](https://github.com/lima-vm/lima)と[AlmaLinux 8](https://almalinux.org/)を組み合わせたアプローチを採用しました。
+AlmaLinux 8はRHEL 8互換のディストリビューションで、デフォルトでcgroup v1を使用しています。
+
+### Lima + AlmaLinux 8によるcgroup v1テスト環境
+
+実装の詳細は以下の通りです。
+
+- GitHub ActionsのUbuntu 24.04ランナー上でLimaを使用してAlmaLinux 8の仮想マシンを起動
+- ゲストVM内にDockerをインストールし、ホストにDockerソケットを転送
+- テストマトリックスに応じて、cgroup v1テスト用にLima VM内のDockerを使用し、cgroup v2テスト用にホストのDockerを使用
+
+このアプローチは[containerd/nerdctl](https://github.com/containerd/nerdctl)の実装を参考にしています。nerdctlでも同様の方法でcgroup v1互換テストを実現していました。
+
+### 実装例
+
+こちらのPRを参考にしてください。
+
+https://github.com/youki-dev/youki/pull/3102
+
+## Ubuntu 24.04への移行で発生した他の問題
+
+GitHub ActionsのUbuntu 24.04への移行では、cgroup v1/v2の問題以外にも以下の課題がありました。
+
+### 1. AppArmorの制限強化
+
+Ubuntu 24.04（Noble Numbat）では、非特権ユーザー名前空間に対するAppArmorの制限が強化されました。
+これにより、コンテナのテストが失敗するようになりました。
+
+この問題の解決には一時的にAppArmorの制限を緩和する方法があります。
+[リリースノート](https://discourse.ubuntu.com/t/ubuntu-24-04-lts-noble-numbat-release-notes/39890#p-99950-unprivileged-user-namespace-restrictions)にあるように、
+以下のように、GitHub ActionsのジョブでAppArmorの制限を無効化することで、テストを実行できます。
+
+```yaml
+- name: Disable AppArmor restrictions for unprivileged user namespaces
+  run: |
+    echo 1 | sudo tee /proc/sys/kernel/unprivileged_userns_apparmor_policy
+```
+
+### 2. cgroup v2 CPUコントローラーの変更
+
+Ubuntu 24.04のcgroup v2 CPUコントローラーの挙動が変更され、以下のテストが失敗するようになりました。
+
+- `test_cpu_period_valid_set`
+- `test_cpu_weight_too_high_maximum_set`
+
+詳しくはこちらのコミットを参照してください。
+
+https://github.com/torvalds/linux/commit/49217ea147df7647cb89161b805c797487783fc0
+
+これらの問題に対応するため、テストコードを修正して新しい挙動に対応しました。これらの変更はLinuxカーネル6.10+の実装に合わせたものです。
+
+## まとめ
+
+GitHub ActionsのUbuntu 20.04サポート終了に伴い、cgroup v1のテストを継続する方法として、Lima + AlmaLinux 8を使用する方法が有効だとわかりました。
+この方法により、新しいUbuntu 24.04ランナーを使いながらも、cgroup v1のテストを引き続き実行できます。
+
+またUbuntu 24.04への移行に伴い、AppArmorの制限強化やcgroup v2の挙動変更などいくつかの課題に直面しましたが、それぞれ適切な対応策を見つけることができました。
+
+コンテナランタイム周りに関わる方々にとって、この記事が参考になれば幸いです。
