@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import BaseHead from "../components/BaseHead.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
@@ -23,7 +23,7 @@ const {
 <html lang="en">
   <head>
     <BaseHead title={title} description={description} image={image} />
-    <ViewTransitions />
+    <ClientRouter />
 
     <script is:inline>
       // テーマの初期設定のための関数

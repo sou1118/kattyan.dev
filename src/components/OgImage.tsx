@@ -1,5 +1,4 @@
 import { loadDefaultJapaneseParser } from "budoux";
-import React from "react";
 
 export const OgImage = ({ title = "kattyan.dev" }) => {
   const parser = loadDefaultJapaneseParser();

@@ -5,7 +5,7 @@
 ## 前提条件
 
 - [mise](https://mise.jdx.dev/) - 開発環境マネージャー
-- [bun](https://bun.sh/) - JavaScriptツールチェーン
+- [Node.js](https://nodejs.org/) / [pnpm](https://pnpm.io/) - JavaScriptランタイム / パッケージマネージャー
 
 ## セットアップ
 
@@ -18,36 +18,36 @@ cd kattyan.dev
 mise i
 
 # 依存関係のインストール
-bun install
+pnpm install
 ```
 
 ## 開発
 
 ```bash
 # 開発サーバーの起動
-bun run dev
+pnpm dev
 
 # ビルド
-bun run build
+pnpm build
 
 # プレビュー
-bun run preview
+pnpm preview
 ```
 
 ## 品質管理
 
 ```bash
 # コードのチェック
-bun run check
+pnpm check
 
 # コードの自動修正
-bun run check:fix
+pnpm check:fix
 
 # 記事のチェック
-bun run textlint
+pnpm textlint
 
 # 記事の自動修正
-bun run textlint:fix
+pnpm textlint:fix
 ```
 
 ## ブログ記事の作成

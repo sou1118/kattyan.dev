@@ -1,21 +1,21 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import BlogPost from "../../../layouts/BlogPost.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
-  const filteredPosts = posts.filter((post) => post.slug.startsWith("posts/"));
+  const filteredPosts = posts.filter((post) => post.id.startsWith("posts/"));
 
   return filteredPosts.map((post) => ({
-    params: { slug: post.slug.replace("posts/", "") },
+    params: { slug: post.id.replace("posts/", "") },
     props: { post },
   }));
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content } = await render(post);
 ---
 
-<BlogPost data={post.data} slug={post.slug}>
+<BlogPost data={post.data} slug={post.id}>
   <Content />
 </BlogPost>

@@ -1,6 +1,6 @@
+import { getCollection } from "astro:content";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { getCollection } from "astro:content";
 import { Resvg } from "@resvg/resvg-js";
 import type { APIRoute } from "astro";
 import { createElement } from "react";
@@ -12,8 +12,7 @@ export const GET: APIRoute = async ({ params }) => {
     // ブログ記事の取得
     const posts = await getCollection("blog");
     const post = posts.find(
-      (post) =>
-        post.slug === params.slug || post.slug === `posts/${params.slug}`,
+      (post) => post.id === params.slug || post.id === `posts/${params.slug}`,
     );
 
     if (!post) {
@@ -96,6 +95,6 @@ export const GET: APIRoute = async ({ params }) => {
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
   return posts.map((post) => ({
-    params: { slug: post.slug.replace("posts/", "") },
+    params: { slug: post.id.replace("posts/", "") },
   }));
 }

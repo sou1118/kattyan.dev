@@ -1,6 +1,7 @@
+import { unified } from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
-import tailwind from "@astrojs/tailwind";
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import rehypeKatex from "rehype-katex";
 import remarkLinkCard from "remark-link-card-plus";
@@ -8,13 +9,8 @@ import remarkMath from "remark-math";
 
 export default defineConfig({
   site: "https://kattyan.dev",
-  integrations: [
-    mdx({
-      syntaxHighlight: "shiki",
-      shikiConfig: {
-        theme: "github-dark",
-        wrap: true,
-      },
+  markdown: {
+    processor: unified({
       remarkPlugins: [
         remarkMath,
         [
@@ -28,9 +24,13 @@ export default defineConfig({
       ],
       rehypePlugins: [rehypeKatex],
     }),
-    tailwind(),
-    sitemap(),
-  ],
+    syntaxHighlight: "shiki",
+    shikiConfig: {
+      theme: "github-dark",
+      wrap: true,
+    },
+  },
+  integrations: [mdx(), sitemap()],
   image: {
     service: {
       entrypoint: "astro/assets/services/sharp",
@@ -41,6 +41,11 @@ export default defineConfig({
     "/blog/renewal-blog-astro": "/blog/posts/renewal-blog-astro",
   },
   vite: {
+    plugins: [tailwindcss()],
+    // OGP画像用の React コンポーネント(satori)の JSX を変換する
+    oxc: {
+      jsx: { runtime: "automatic", importSource: "react" },
+    },
     optimizeDeps: {
       exclude: ["@resvg/resvg-js"],
     },

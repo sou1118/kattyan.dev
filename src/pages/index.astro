@@ -27,12 +27,12 @@ const posts = (await getCollection("blog"))
       <h2 class="text-2xl font-semibold">Latest Posts</h2>
       <div class="grid gap-4">
         {posts.map((post) => (
-          <a href={`/blog/${post.slug}`} class="no-underline group">
+          <a href={`/blog/${post.id}`} class="no-underline group">
             <article class="rounded-lg border bg-card p-6 transition-colors hover:bg-muted/50">
               <div class="flex flex-col space-y-2">
                 <div class="flex items-center gap-2">
                   {post.data.emoji && (
-                    <span class="text-2xl" transition:name={`emoji-${post.slug}`}>
+                    <span class="text-2xl" transition:name={`emoji-${post.id}`}>
                       {post.data.emoji}
                     </span>
                   )}
