@@ -6,6 +6,7 @@
 
 - [mise](https://mise.jdx.dev/) - 開発環境マネージャー
 - [Node.js](https://nodejs.org/) / [pnpm](https://pnpm.io/) - JavaScriptランタイム / パッケージマネージャー
+- [Typst](https://typst.app/) - OGP画像の生成
 
 ## セットアップ
 

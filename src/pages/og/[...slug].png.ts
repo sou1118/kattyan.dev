@@ -1,100 +1,52 @@
 import { getCollection } from "astro:content";
-import fs from "node:fs/promises";
+import { execFile } from "node:child_process";
 import path from "node:path";
-import { Resvg } from "@resvg/resvg-js";
-import type { APIRoute } from "astro";
-import { createElement } from "react";
-import satori from "satori";
-import { OgImage } from "../../components/OgImage";
+import { promisify } from "node:util";
+import type { APIRoute, GetStaticPaths } from "astro";
 
-export const GET: APIRoute = async ({ params }) => {
-  try {
-    // ブログ記事の取得
-    const posts = await getCollection("blog");
-    const post = posts.find(
-      (post) => post.id === params.slug || post.id === `posts/${params.slug}`,
-    );
+const execFileAsync = promisify(execFile);
 
-    if (!post) {
-      console.error("Post not found:", params.slug);
-      return new Response("Not Found", { status: 404 });
-    }
+// Typst でテンプレートから PNG を生成する
+const renderOgImage = async (title: string) => {
+  const { stdout } = await execFileAsync(
+    "typst",
+    [
+      "compile",
+      "--ignore-system-fonts",
+      "--font-path",
+      path.resolve(process.cwd(), "src/assets/fonts/LINESeed-jp"),
+      "--input",
+      `title=${title}`,
+      "--format",
+      "png",
+      "--ppi",
+      "72",
+      path.resolve(process.cwd(), "src/og/template.typ"),
+      "-",
+    ],
+    { encoding: "buffer", maxBuffer: 16 * 1024 * 1024 },
+  );
+  return stdout;
+};
 
-    // フォントの読み込み
-    const fontRegular = await fs.readFile(
-      path.resolve(
-        process.cwd(),
-        "src/assets/fonts/LINESeed-jp/LINESeedJP-OTF-Rg.woff",
-      ),
-    );
-
-    const fontBold = await fs.readFile(
-      path.resolve(
-        process.cwd(),
-        "src/assets/fonts/LINESeed-jp/LINESeedJP-OTF-Bd.woff",
-      ),
-    );
-
-    // SVGの生成
-    const svg = await satori(
-      createElement(OgImage, {
-        title: post.data.title,
-      }),
-      {
-        width: 1200,
-        height: 630,
-        fonts: [
-          {
-            name: "LINE Seed JP",
-            data: fontRegular,
-            weight: 400,
-            style: "normal",
-          },
-          {
-            name: "LINE Seed JP",
-            data: fontBold,
-            weight: 700,
-            style: "normal",
-          },
-        ],
-      },
-    );
-
-    // SVGからPNGへの変換
-    const resvg = new Resvg(svg, {
-      fitTo: {
-        mode: "width",
-        value: 1200,
-      },
-    });
-    const pngBuffer = resvg.render().asPng();
-
-    return new Response(pngBuffer, {
-      headers: {
-        "Content-Type": "image/png",
-        "Cache-Control": "public, max-age=31536000, immutable",
-      },
-    });
-  } catch (error: unknown) {
-    console.error("OGP生成エラー:", error);
-    if (error instanceof Error) {
-      if (error.stack) {
-        console.error(error.stack);
-      }
-      return new Response(`Failed to generate OGP: ${error.message}`, {
-        status: 500,
-      });
-    }
-    return new Response("An unknown error occurred", {
-      status: 500,
-    });
-  }
+export const GET: APIRoute = async ({ props }) => {
+  const png = await renderOgImage(props.title);
+  return new Response(png, {
+    headers: {
+      "Content-Type": "image/png",
+      "Cache-Control": "public, max-age=31536000, immutable",
+    },
+  });
 };
 
 // 静的なパスの生成
-export async function getStaticPaths() {
+export const getStaticPaths = (async () => {
   const posts = await getCollection("blog");
-  return posts.map((post) => ({
-    params: { slug: post.id.replace("posts/", "") },
-  }));
-}
+  return [
+    { params: { slug: "default" }, props: { title: "kattyan.dev" } },
+    ...posts.map((post) => ({
+      params: { slug: post.id.replace("posts/", "") },
+      props: { title: post.data.title },
+    })),
+  ];
+}) satisfies GetStaticPaths;

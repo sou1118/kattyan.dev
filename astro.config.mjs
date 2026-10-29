@@ -42,12 +42,5 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
-    // OGP画像用の React コンポーネント(satori)の JSX を変換する
-    oxc: {
-      jsx: { runtime: "automatic", importSource: "react" },
-    },
-    optimizeDeps: {
-      exclude: ["@resvg/resvg-js"],
-    },
   },
 });
