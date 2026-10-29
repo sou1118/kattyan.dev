@@ -1,0 +1,165 @@
+---
+title: "mise bootstrapでMacとUbuntuの環境構築をひとつのdotfilesにまとめる"
+description: "mise bootstrapのauto_envを使って、macOSとUbuntuデスクトップのパッケージ・dotfiles・サービスを1つのリポジトリで管理するようにしました"
+pubDate: 2026-10-30T02:00:00+09:00
+emoji: "🧰"
+tags: ["linux", "programming"]
+---
+
+この記事の本文は筆者が執筆し、LLMを使って添削しています。
+
+## はじめに
+
+これまでMacの環境構築はNixで管理しており、Ubuntuは特に管理してませんでした。miseにパッケージ・dotfiles・OSの設定をまとめて宣言できる`mise bootstrap`が入ったので、いい機会だと思いそちらへ移行しました。
+
+Nix自体素晴らしいソフトウェアです。しかしながら昨今の事情を鑑みて提供元がリリースしているバイナリを使いたかったこと、自分にとってはそこまで厳密な定義は不要だったことの2点から乗り換えました。
+
+元々はMac専用の設定だったのですが、自宅のUbuntuデスクトップも同じリポジトリで管理したくなったので、OSごとに設定を分けられるように整理しました。
+
+## mise bootstrapとは
+
+`config.toml`にパッケージ・dotfiles・macOSのdefaults・systemdのサービスなどを宣言しておくと、`mise bootstrap`の1コマンドで環境構築が行えます。
+miseはもともとランタイムやCLIツールの管理に使っていたので、ツールを増やさずに済むのが良いところです。
+
+https://mise.jdx.dev/bootstrap.html
+
+## 構成
+
+最終的に次の形になりました。
+
+- `.config/mise/miserc.toml`: `auto_env = true`
+- `.config/mise/config.toml`: 共通のsettings・tools・dotfiles
+- `.config/mise/config.macos.toml`: Homebrew・macOSのdefaults・Touch IDでのsudo
+- `.config/mise/config.linux.toml`: apt・snap・aptリポジトリ・systemdのサービス
+- `.zshrc` / `.zshenv`: OSごとの差分は`$OSTYPE`で分岐
+
+`~/.config/mise`自体をリポジトリへのシンボリックリンクにしておき、dotfilesは`[dotfiles]`でシンボリックリンクを張っています。
+
+詳しくは以下のリポジトリをご覧ください。
+
+https://github.com/sou1118/dotfiles
+
+## auto_envでOSごとに設定を分ける
+
+miseには`config.<env>.toml`を共通の`config.toml`に加えて、`config.<env>.toml`を環境ごとに重ねて読み込める仕組みがあります。
+私物Macと仕事Macを`miserc.local.toml`の`env`で切り替える使い方を紹介している記事もありました。
+
+https://blog.shibayu36.org/entry/2026/10/13/173000
+
+今回分けたいのはマシンではなくOSなので、`auto_env`を使いました。
+`miserc.toml`で有効にすると、`linux`や`macos`といったOS名が自動でenvとして扱われ、`config.linux.toml`や`config.macos.toml`が読み込まれます。
+
+```toml
+auto_env = true
+```
+
+マシンごとの設定ファイルが不要なので、cloneしてシンボリックリンクを張るだけで済みます。
+明示的に指定したenvのほうが優先されるので、あとから私物・仕事で分けたくなっても`config.work.toml`を足すだけで併用できます。
+
+### 分けないとどうなるか
+
+最初はMac用の`config.toml`をそのままUbuntuで読ませてみましたが、`brew:`や`brew-cask:`の項目まで処理しようとしてエラーになりました。
+HomebrewはLinuxでも使えるので、Linuxでも有効なパッケージマネージャーとして扱われるようです。
+エントリごとに`os = "macos"`を付けるやり方もありますが、項目数が多いのでファイルごと分けました。
+
+## Ubuntu側の設定
+
+### aptのパッケージ
+
+Macでbrewから入れていたものをaptに置き換えつつ、Ubuntuで実際に使っているものを足していきました。
+
+```toml
+[bootstrap.packages]
+"apt:git" = "latest"
+"apt:tailscale" = "latest"
+"apt:code" = "latest"
+"apt:wezterm" = "latest"
+"snap:spotify" = "latest"
+```
+
+漏れがないかは`apt-mark showmanual`の結果と突き合わせて確認しました。
+思っていたより、aptで管理できていないものが多かったです。
+
+特に沼ったのは1Password CLIで、miseのaqua-backendで管理しようと思ったところ、アプリのCLI結合が使えなかったためapt・brewで入れてあげる必要があります。
+
+### 外部のaptリポジトリも宣言できる
+
+VS CodeやChrome、Tailscaleなどは外部のaptリポジトリから入れる必要があります。
+`[bootstrap.apt.sources]`にリポジトリと署名鍵を書いておくと、miseが`/etc/apt/sources.list.d/mise-<name>.sources`を作ってくれます。
+
+```toml
+[bootstrap.apt.sources.vscode]
+uris = "https://packages.microsoft.com/repos/code"
+suites = "stable"
+components = "main"
+key = "https://packages.microsoft.com/keys/microsoft.asc"
+fingerprint = "BC52 8686 B50D 79E3 39D3 721C EB3E 94AD BE12 29CF"
+```
+
+`fingerprint`は必須で、ダウンロードした鍵のうち指定した指紋のものだけが使われます。
+鍵は`Signed-By`に埋め込まれるので、そのリポジトリだけで信頼されます。
+
+いくつかハマりどころがありました。
+
+- もともとあった`vscode.sources`などが同じリポジトリを別の鍵で指していると、aptが`Signed-By`の衝突で失敗するので、古い方を消してから適用しました
+- WezTermのリポジトリは`dists/*/`という構成なので、`suites`と`components`に`"*"`を指定しました
+- Slack・Discord・Zoomなど、aptリポジトリがなく.debを直接配っているアプリは宣言できません
+
+### systemdのサービス
+
+`[bootstrap.services]`で既存のsystemdユニットの起動・有効化も宣言できます。
+今回はtailscaledだけ書きました。
+
+```toml
+[bootstrap.services.tailscaled]
+state = "running"
+enabled = true
+```
+
+ほかにもユーザー単位のsystemdユニットやファイアウォール（`[bootstrap.linux.firewall]`）も書けます。
+
+## グローバルに置くツールとプロジェクトに置くツール
+
+aptで入れていたcmakeやninjaなどは、一度miseのaquaバックエンドに寄せました。
+ただ、ビルドツールはプロジェクトごとにバージョンが違うので、グローバルではなく各プロジェクトの`mise.toml`で入れるようにしました。
+グローバルに残したのは、bat・lsd・ripgrepなどどこでも使うCLIツールだけです。
+
+tokeiは最新版のビルド済みバイナリが配布されておらず、aquaでは入れられなかったので、apt・brewのままにしています。
+
+## zshの設定
+
+`.zshrc`はOSで分岐させて、1つのファイルを両方で使っています。
+
+```zsh
+if [[ $OSTYPE == darwin* ]]; then
+  # Homebrew（mise が /opt/homebrew に入れる）
+  path=(/opt/homebrew/bin /opt/homebrew/sbin $path)
+  fpath+=(/opt/homebrew/share/zsh/site-functions)
+fi
+
+if [[ $OSTYPE == linux* ]]; then
+  # ローカルセッションのみ 1Password の SSH Agent を使う
+  if [[ -z "$SSH_CONNECTION" && -S "$HOME/.1password/agent.sock" ]]; then
+    export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
+  fi
+fi
+```
+
+## 新しいマシンでのセットアップ
+
+dotfilesのリンク元のパスを固定しているので、決まった場所にcloneします。
+
+```sh
+curl https://mise.run | sh
+git clone https://github.com/sou1118/dotfiles ~/ghq/github.com/sou1118/dotfiles
+ln -s ~/ghq/github.com/sou1118/dotfiles/.config/mise ~/.config/mise
+~/.local/bin/mise bootstrap
+```
+
+## おわりに
+
+移行しようと半年くらい前から思っていたものの、なかなか腰が上がらず放置していました。やってみたら快適に使えて嬉しいです。
+
+mise自体新しめのソフトウェアなのでいろんな機能がガンガン入ってくるのが面白いし楽しいですね。
+
+作者のjdx氏はソフトウェアサプライチェーンにも真剣に向き合っていて、色々と勉強させていただいています。
