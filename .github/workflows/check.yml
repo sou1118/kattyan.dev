@@ -9,7 +9,7 @@ on:
 
 jobs:
   check:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     strategy:
       matrix:
         check-type: ["biome", "textlint", "build"]
@@ -39,7 +39,7 @@ jobs:
         run: pnpm run build
 
   status-check:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: check
     permissions: {}
     if: always()
@@ -53,7 +53,7 @@ jobs:
 
   enable-auto-merge:
     needs: [status-check]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     permissions:
       contents: write
       pull-requests: write
