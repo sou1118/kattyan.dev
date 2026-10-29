@@ -2,8 +2,6 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:js-app",
-    "schedule:weekly",
-    ":maintainLockFilesWeekly",
     ":semanticCommits",
     "helpers:pinGitHubActionDigests"
   ],
@@ -12,75 +10,76 @@
     {
       "groupName": "astro packages",
       "groupSlug": "astro",
-      "automerge": true,
       "matchPackageNames": ["/^@astrojs/", "/^astro$/"]
     },
     {
       "groupName": "biome packages",
       "groupSlug": "biome",
-      "automerge": true,
       "matchPackageNames": ["/^@biomejs/"]
     },
     {
       "groupName": "textlint packages",
       "groupSlug": "textlint",
-      "automerge": true,
       "matchPackageNames": ["/^textlint/"]
     },
     {
       "groupName": "tailwind packages",
       "groupSlug": "tailwind",
-      "automerge": true,
-      "matchPackageNames": [
-        "/^@tailwindcss/",
-        "/^tailwindcss$/",
-        "/^postcss$/",
-        "/^autoprefixer$/"
-      ]
+      "matchPackageNames": ["/^@tailwindcss/", "/^tailwindcss$/"]
     },
     {
       "groupName": "rehype packages",
       "groupSlug": "rehype",
-      "automerge": true,
       "matchPackageNames": ["/^rehype-/"]
     },
     {
       "groupName": "remark packages",
       "groupSlug": "remark",
-      "automerge": true,
       "matchPackageNames": ["/^remark-/"]
     },
     {
       "matchPackageNames": ["katex", "rehype-katex"],
       "groupName": "katex packages",
-      "groupSlug": "katex",
-      "automerge": true
+      "groupSlug": "katex"
     },
     {
       "matchPackageNames": ["shiki", "sharp"],
       "groupName": "image processing and syntax highlighting",
-      "groupSlug": "image-syntax",
-      "automerge": true
-    },
-    {
-      "matchUpdateTypes": ["major"],
-      "automerge": false
+      "groupSlug": "image-syntax"
     },
     {
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["patch", "minor"],
-      "groupName": "dev dependencies (non-major)",
+      "groupName": "dev dependencies (non-major)"
+    },
+    {
+      "description": "minor・patch などの非破壊的な更新は CI が通れば自動マージする",
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
+    },
+    {
+      "description": "0.x の minor 更新は semver 上破壊的変更を含みうるので手動でマージする",
+      "matchUpdateTypes": ["minor"],
+      "matchCurrentVersion": "/^0\\./",
+      "automerge": false
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false
     }
   ],
   "lockFileMaintenance": {
     "enabled": true,
-    "schedule": ["before 3am on monday"]
+    "schedule": ["* * * * 1"]
   },
+  "vulnerabilityAlerts": {
+    "minimumReleaseAge": null
+  },
+  "osvVulnerabilityAlerts": true,
   "timezone": "Asia/Tokyo",
   "dependencyDashboard": true,
   "rangeStrategy": "pin",
   "prCreation": "not-pending",
-  "minimumReleaseAge": "3 days",
+  "minimumReleaseAge": "7 days",
   "platformAutomerge": true
 }
