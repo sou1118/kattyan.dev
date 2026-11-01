@@ -1,8 +1,10 @@
 ---
 import { ClientRouter } from "astro:transitions";
+
 import BaseHead from "../components/BaseHead.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
+
 import "../styles/globals.css";
 import "katex/dist/katex.min.css";
 
@@ -29,45 +31,51 @@ const {
       // テーマの初期設定のための関数
       function initTheme() {
         const theme = (() => {
-          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-            return localStorage.getItem('theme');
+          if (
+            typeof localStorage !== "undefined" &&
+            localStorage.getItem("theme")
+          ) {
+            return localStorage.getItem("theme");
           }
-          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            return 'dark';
+          if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            return "dark";
           }
-          return 'light';
+          return "light";
         })();
-        
-        if (theme === 'light') {
-          document.documentElement.classList.remove('dark');
+
+        if (theme === "light") {
+          document.documentElement.classList.remove("dark");
         } else {
-          document.documentElement.classList.add('dark');
+          document.documentElement.classList.add("dark");
         }
 
-        window.localStorage.setItem('theme', theme);
+        window.localStorage.setItem("theme", theme);
       }
-      
+
       // 初期化の実行
       initTheme();
     </script>
 
     <script>
-      document.addEventListener('astro:after-swap', () => {
+      document.addEventListener("astro:after-swap", () => {
         // ページ遷移後のテーマの復元
-        localStorage.getItem('theme') === 'dark'
-          ? document.documentElement.classList.add('dark')
-          : document.documentElement.classList.remove('dark');
+        document.documentElement.classList.toggle(
+          "dark",
+          localStorage.getItem("theme") === "dark",
+        );
       });
     </script>
     <!-- GoatCounter Analytics -->
     <script is:inline>
       window.goatcounter = {
-        path: function(p) { return location.host + p }
-      }
+        path: function (p) {
+          return location.host + p;
+        },
+      };
     </script>
-    <script 
+    <script
       data-goatcounter="https://kattyan.goatcounter.com/count"
-      async 
+      async
       src="//gc.zgo.at/count.js"
     ></script>
   </head>

@@ -15,7 +15,7 @@ Astroベースの静的サイトジェネレーターを使用したホームペ
 
 ### 開発ツール
 
-- **Biome** - LintとFormatter
+- **Oxlint / Oxfmt** - LinterとFormatter
 - **textlint** - 記事のLint
 - **mise** - 開発環境マネージャー
 - **pnpm** - パッケージマネージャー
@@ -49,7 +49,7 @@ Astroベースの静的サイトジェネレーターを使用したホームペ
 GitHub Actionsを使用して、テスト、ビルド、デプロイを自動化しています。
 
 1. **CIワークフロー** (`ci.yml`)
-   - Biomeによるコードフォーマットチェック
+   - Oxlint・Oxfmtによるコードチェック
    - textlintによるコンテンツ検証
    - ビルド検証
    - マトリックス戦略による並列実行

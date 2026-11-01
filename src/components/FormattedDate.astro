@@ -9,14 +9,12 @@ const { date, class: className, showTime = false } = Astro.props;
 ---
 
 <time datetime={date.toISOString()} class={className}>
-  {
-    date.toLocaleDateString('ja-jp', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: showTime ? '2-digit' : undefined,
-      minute: showTime ? '2-digit' : undefined,
-      timeZone: 'Asia/Tokyo'
-    })
-  }
+  {date.toLocaleDateString("ja-jp", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: showTime ? "2-digit" : undefined,
+    minute: showTime ? "2-digit" : undefined,
+    timeZone: "Asia/Tokyo",
+  })}
 </time>

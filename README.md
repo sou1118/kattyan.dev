@@ -88,5 +88,5 @@ mainブランチへのプッシュで自動的にGitHub Pagesへデプロイさ�
 
 - リリースは自動化（GitHub Actions + GitHub Pages）
 - 依存関係の更新は自動化（Renovate）
-- コードのLintとFormatはBiomeで
+- コードのLintはOxlint、FormatはOxfmtで
 - 記事の品質管理はtextlintで

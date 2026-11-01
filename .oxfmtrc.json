@@ -1,0 +1,8 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 80,
+  "astro": true,
+  "sortImports": true,
+  "sortPackageJson": false,
+  "ignorePatterns": ["**/*.svg", "**/*.md", "**/*.mdx", "pnpm-lock.yaml"]
+}

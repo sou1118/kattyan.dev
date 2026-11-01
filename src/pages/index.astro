@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+
 import FormattedDate from "../components/FormattedDate.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
@@ -12,9 +13,7 @@ const posts = (await getCollection("blog"))
   <div class="space-y-8">
     <div class="space-y-4">
       <h1 class="text-4xl font-bold">Hi, I'm Kattyan</h1>
-      <p class="text-xl text-muted-foreground">
-        A programming lover
-      </p>
+      <p class="text-xl text-muted-foreground">A programming lover</p>
     </div>
 
     <div class="prose prose-zinc dark:prose-invert w-full max-w-none">
@@ -36,24 +35,50 @@ const posts = (await getCollection("blog"))
                       {post.data.emoji}
                     </span>
                   )}
-                  <h3 class="text-2xl font-semibold tracking-tight">{post.data.title}</h3>
+                  <h3 class="text-2xl font-semibold tracking-tight">
+                    {post.data.title}
+                  </h3>
                 </div>
                 <p class="text-muted-foreground">{post.data.description}</p>
-                <FormattedDate date={post.data.pubDate} class="text-sm text-muted-foreground" />
+                <FormattedDate
+                  date={post.data.pubDate}
+                  class="text-sm text-muted-foreground"
+                />
               </div>
             </article>
           </a>
         ))}
       </div>
-      <a href="/blog" class="inline-flex text-sm text-muted-foreground hover:text-foreground">
+      <a
+        href="/blog"
+        class="inline-flex text-sm text-muted-foreground hover:text-foreground"
+      >
         View all posts &rarr;
       </a>
     </div>
     <div class="prose prose-zinc dark:prose-invert text-sm max-w-none">
       <p class="text-muted-foreground">
-        当サイトでは <a href="https://www.goatcounter.com/" class="hover:text-foreground" target="_blank" rel="noopener noreferrer">GoatCounter</a> を使用してアクセス解析を行っています。
+        当サイトでは{" "}
+        <a
+          href="https://www.goatcounter.com/"
+          class="hover:text-foreground"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GoatCounter
+        </a>{" "}
+        を使用してアクセス解析を行っています。
         これはプライバシーを重視した分析ツールで、個人を特定できる情報は収集しません。
-        詳しくは <a href="https://www.goatcounter.com/help/privacy" class="hover:text-foreground" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a> をご確認ください。
+        詳しくは{" "}
+        <a
+          href="https://www.goatcounter.com/help/privacy"
+          class="hover:text-foreground"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          プライバシーポリシー
+        </a>{" "}
+        をご確認ください。
       </p>
     </div>
   </div>

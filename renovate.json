@@ -13,9 +13,9 @@
       "matchPackageNames": ["/^@astrojs/", "/^astro$/"]
     },
     {
-      "groupName": "biome packages",
-      "groupSlug": "biome",
-      "matchPackageNames": ["/^@biomejs/"]
+      "groupName": "oxc packages",
+      "groupSlug": "oxc",
+      "matchPackageNames": ["oxlint", "oxfmt", "@astrojs/compiler-rs"]
     },
     {
       "groupName": "textlint packages",

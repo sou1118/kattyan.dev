@@ -13,6 +13,7 @@ const {
   ogType = "website",
 } = Astro.props;
 ---
+
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -21,9 +22,22 @@ const {
 
 <!-- Reader Mode Support -->
 <meta name="color-scheme" content="dark light" />
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000" />
-<link rel="alternate" type="application/rss+xml" title={`${title} - RSS Feed`} href="/rss.xml" />
+<meta
+  name="theme-color"
+  media="(prefers-color-scheme: light)"
+  content="#ffffff"
+/>
+<meta
+  name="theme-color"
+  media="(prefers-color-scheme: dark)"
+  content="#000000"
+/>
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={`${title} - RSS Feed`}
+  href="/rss.xml"
+/>
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
@@ -53,20 +67,20 @@ const {
 <!-- Dark mode script -->
 <script is:inline>
   const theme = (() => {
-    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-      return localStorage.getItem('theme');
+    if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+      return localStorage.getItem("theme");
     }
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      return "dark";
     }
-    return 'light';
+    return "light";
   })();
-  
-  if (theme === 'light') {
-    document.documentElement.classList.remove('dark');
+
+  if (theme === "light") {
+    document.documentElement.classList.remove("dark");
   } else {
-    document.documentElement.classList.add('dark');
+    document.documentElement.classList.add("dark");
   }
-  
-  window.localStorage.setItem('theme', theme);
+
+  window.localStorage.setItem("theme", theme);
 </script>
