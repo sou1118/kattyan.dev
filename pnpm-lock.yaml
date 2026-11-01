@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@astrojs/markdown-remark':
-        specifier: ^7.3.5
+        specifier: 7.3.5
         version: 7.3.5(supports-color@7.2.0)
       '@astrojs/mdx':
         specifier: 8.1.2
